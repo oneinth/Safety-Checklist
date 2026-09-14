@@ -257,7 +257,6 @@
             border: 1px solid #fecaca;
         }
 
-        /* กล่องแสดงรายละเอียดข้อมูลสรุปในหน้า Modal สีเขียว */
         #modal-info-box {
             margin-top: 10px;
             background-color: #f0fdfa;
@@ -316,7 +315,7 @@
                 <label><input type="radio" name="q1" value="yes" onclick="clearError('q1')"> Yes</label>
                 <label><input type="radio" name="q1" value="no" onclick="clearError('q1')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบชื่อ-นามสกุลของผู้ป่วยให้ตรงกับป้ายข้อมือ</div>
         </div>
 
         <!-- ข้อ 2 -->
@@ -326,7 +325,7 @@
                 <label><input type="radio" name="q2" value="yes" onclick="clearError('q2')"> Yes</label>
                 <label><input type="radio" name="q2" value="no" onclick="clearError('q2')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
+            <div class="error-label-text">⚠️ กรุณาสอบถามชื่อ-นามสกุลก่อนผู้ป่วยเคลื่อนย้าย</div>
         </div>
 
         <!-- ข้อ 3 -->
@@ -336,7 +335,7 @@
                 <label><input type="radio" name="q3" value="yes" onclick="clearError('q3')"> Yes</label>
                 <label><input type="radio" name="q3" value="no" onclick="clearError('q3')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบการเซ็นยินยอมของผู้ปกครองให้เรียบร้อย</div>
         </div>
 
         <!-- ข้อ 4 -->
@@ -346,7 +345,7 @@
                 <label><input type="radio" name="q4" value="yes" onclick="clearError('q4')"> Yes</label>
                 <label><input type="radio" name="q4" value="no" onclick="clearError('q4')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</div>
         </div>
 
         <!-- ข้อ 5 -->
@@ -356,7 +355,7 @@
                 <label><input type="radio" name="q5" value="yes" onclick="clearError('q5')"> Yes</label>
                 <label><input type="radio" name="q5" value="no" onclick="clearError('q5')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบการงดน้ำ-งดอาหารของผู้ป่วย</div>
         </div>
 
         <!-- ข้อ 6 -->
@@ -378,14 +377,14 @@
                     <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา..." oninput="clearError('q6')">
                 </div>
             </div>
-            <div class="error-label-text">⚠️ ข้อนี้ยังไม่สมบูรณ์หรือไม่ได้ตอบ</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบข้อมูลการแพ้อาหารหรือยาให้ครบถ้วน</div>
         </div>
 
         <!-- ลงชื่อผู้ตรวจสอบ -->
         <div class="signature-section" id="item-sig">
             <label for="inspectorName">ลงชื่อผู้ตรวจสอบ:</label>
             <input type="text" id="inspectorName" placeholder="พิมพ์ชื่อ-นามสกุลผู้ตรวจสอบ..." oninput="clearError('sig')">
-            <div class="error-label-text">⚠️ กรุณากรอกชื่อผู้ตรวจสอบ</div>
+            <div class="error-label-text">⚠️ กรุณากรอกชื่อผู้ตรวจสอบให้เรียบร้อย</div>
         </div>
 
         <!-- ปุ่มส่งผลการตรวจสอบ -->
@@ -443,7 +442,6 @@
     }
 
     function submitChecklist() {
-        // เคลียร์ไฮไลต์เก่า
         document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
         document.getElementById('item-sig').classList.remove('error-highlight');
 
@@ -459,7 +457,6 @@
 
         let hasError = false;
 
-        // ตรวจสอบความถูกต้องแต่ละข้อ
         if (!q1 || q1.value !== 'yes') { document.getElementById('item-q1').classList.add('error-highlight'); hasError = true; }
         if (!q2 || q2.value !== 'yes') { document.getElementById('item-q2').classList.add('error-highlight'); hasError = true; }
         if (!q3 || q3.value !== 'yes') { document.getElementById('item-q3').classList.add('error-highlight'); hasError = true; }
@@ -481,13 +478,11 @@
             hasError = true;
         }
 
-        // ตรวจสอบชื่อผู้ตรวจสอบแยกต่างหาก
         if (inspectorName === '') {
             document.getElementById('item-sig').classList.add('error-highlight');
             hasError = true;
         }
 
-        // จัดการเปิดหน้า Modal ผลลัพธ์
         const modal = document.getElementById('result-modal');
         const modalResultBox = document.getElementById('modal-result-box');
         const modalInfoBox = document.getElementById('modal-info-box');
@@ -500,7 +495,6 @@
             modalResultBox.className = 'modal-result-box modal-success';
             modalResultBox.innerHTML = '✅ ผ่าน';
             
-            // สร้างข้อความรายละเอียด (ชื่อผู้ตรวจสอบ + ข้อมูลการแพ้ยา/อาหาร)
             let infoHTML = `<strong>👤 ผู้ตรวจสอบ:</strong> ${escapeHtml(inspectorName)}`;
             
             if (q6Sub && q6Sub.value === 'allergic') {
@@ -524,7 +518,6 @@
         }
     }
 
-    // ฟังก์ชันป้องกัน XSS เบื้องต้นเวลาดึงชื่อมาแสดง
     function escapeHtml(text) {
         return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
@@ -534,14 +527,12 @@
         modal.style.display = 'none';
 
         if (isPassed) {
-            // ล้างฟอร์มทั้งหมดเพื่อเริ่มใหม่
             document.getElementById('safetyChecklist').reset();
             document.getElementById('q6SubContainer').style.display = 'none';
             document.getElementById('allergyDetailBox').style.display = 'none';
             document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
             document.getElementById('item-sig').classList.remove('error-highlight');
         } else {
-            // พาหน้าจอเลื่อนไปที่จุดผิดพลาดจุดแรก
             const firstError = document.querySelector('.error-highlight');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
