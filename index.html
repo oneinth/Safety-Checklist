@@ -109,7 +109,7 @@
             font-weight: 600;
         }
 
-        /* ส่วนข้อย่อยของข้อ 5 */
+        /* ส่วนข้อย่อยของข้อ 6 */
         .sub-options-container {
             margin-top: 15px;
             padding-top: 15px;
@@ -281,21 +281,30 @@
             </div>
         </div>
 
-        <!-- ข้อ 5 -->
+        <!-- ข้อ 5 (เพิ่มใหม่: งดน้ำ-งดอาหาร) -->
         <div class="question-item">
-            <span class="question-title">5. มีการตรวจเช็คผู้ป่วยแพ้อาหารหรือยาหรือไม่</span>
+            <span class="question-title">5. ผู้ป่วยได้รับการงดน้ำ-งดอาหารหรือไม่</span>
             <div class="options">
-                <label><input type="radio" name="q5" value="yes" onclick="toggleQ5Main('yes')" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q5" value="no" onclick="toggleQ5Main('no')" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q5" value="yes" onchange="checkStatus()"> Yes</label>
+                <label><input type="radio" name="q5" value="no" onchange="checkStatus()"> No</label>
+            </div>
+        </div>
+
+        <!-- ข้อ 6 (เลื่อนมาจากข้อเดิม) -->
+        <div class="question-item">
+            <span class="question-title">6. มีการตรวจเช็คผู้ป่วยแพ้อาหารหรือยาหรือไม่</span>
+            <div class="options">
+                <label><input type="radio" name="q6" value="yes" onclick="toggleQ6Main('yes')" onchange="checkStatus()"> Yes</label>
+                <label><input type="radio" name="q6" value="no" onclick="toggleQ6Main('no')" onchange="checkStatus()"> No</label>
             </div>
             
-            <!-- ข้อย่อยที่จะแสดงเมื่อเลือก Yes -->
-            <div id="q5SubContainer" class="sub-options-container">
+            <!-- ข้อย่อยของข้อ 6 -->
+            <div id="q6SubContainer" class="sub-options-container">
                 <label class="sub-option-item">
-                    <input type="radio" name="q5_sub" value="none" onclick="toggleQ5Sub('none')" onchange="checkStatus()"> 5.1 ไม่แพ้อาหารหรือยา
+                    <input type="radio" name="q6_sub" value="none" onclick="toggleQ6Sub('none')" onchange="checkStatus()"> 6.1 ไม่แพ้อาหารหรือยา
                 </label>
                 <label class="sub-option-item">
-                    <input type="radio" name="q5_sub" value="allergic" onclick="toggleQ5Sub('allergic')" onchange="checkStatus()"> 5.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
+                    <input type="radio" name="q6_sub" value="allergic" onclick="toggleQ6Sub('allergic')" onchange="checkStatus()"> 6.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
                 </label>
                 <div id="allergyDetailBox" class="hidden-input">
                     <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา เช่น แพ้ยาเพนิซิลลิน..." oninput="checkStatus()">
@@ -322,8 +331,8 @@
 </div>
 
 <script>
-    function toggleQ5Main(val) {
-        const subContainer = document.getElementById('q5SubContainer');
+    function toggleQ6Main(val) {
+        const subContainer = document.getElementById('q6SubContainer');
         const detailBox = document.getElementById('allergyDetailBox');
         
         if (val === 'yes') {
@@ -331,14 +340,14 @@
         } else {
             subContainer.style.display = 'none';
             detailBox.style.display = 'none';
-            const radios = document.querySelectorAll('input[name="q5_sub"]');
+            const radios = document.querySelectorAll('input[name="q6_sub"]');
             radios.forEach(r => r.checked = false);
             document.getElementById('allergyDetail').value = '';
         }
         checkStatus();
     }
 
-    function toggleQ5Sub(subVal) {
+    function toggleQ6Sub(subVal) {
         const detailBox = document.getElementById('allergyDetailBox');
         if (subVal === 'allergic') {
             detailBox.style.display = 'block';
@@ -355,7 +364,8 @@
         const q3 = document.querySelector('input[name="q3"]:checked');
         const q4 = document.querySelector('input[name="q4"]:checked');
         const q5 = document.querySelector('input[name="q5"]:checked');
-        const q5Sub = document.querySelector('input[name="q5_sub"]:checked');
+        const q6 = document.querySelector('input[name="q6"]:checked');
+        const q6Sub = document.querySelector('input[name="q6_sub"]:checked');
         const allergyDetail = document.getElementById('allergyDetail').value.trim();
         const inspectorName = document.getElementById('inspectorName').value.trim();
         
@@ -364,36 +374,37 @@
         resultBox.style.display = 'block';
 
         // ตรวจสอบความครบถ้วนของฟอร์ม
-        let q5Complete = false;
-        if (q5) {
-            if (q5.value === 'no') {
-                q5Complete = true; 
-            } else if (q5.value === 'yes' && q5Sub) {
-                if (q5Sub.value === 'none') {
-                    q5Complete = true;
-                } else if (q5Sub.value === 'allergic' && allergyDetail !== '') {
-                    q5Complete = true;
+        let q6Complete = false;
+        if (q6) {
+            if (q6.value === 'no') {
+                q6Complete = true; 
+            } else if (q6.value === 'yes' && q6Sub) {
+                if (q6Sub.value === 'none') {
+                    q6Complete = true;
+                } else if (q6Sub.value === 'allergic' && allergyDetail !== '') {
+                    q6Complete = true;
                 }
             }
         }
 
-        const allAnswered = q1 && q2 && q3 && q4 && q5Complete && inspectorName !== '';
+        const allAnswered = q1 && q2 && q3 && q4 && q5 && q6Complete && inspectorName !== '';
 
-        // เงื่อนไขผ่าน: ข้อ 1-4 ต้องเป็น Yes, ข้อ 5 ต้องเป็น Yes และเลือก 5.1 หรือ 5.2 (ที่กรอกข้อมูลครบ)
-        const q1to4Yes = (q1 && q1.value === 'yes') &&
+        // เงื่อนไขผ่าน: ข้อ 1-5 ต้องเป็น Yes, ข้อ 6 ต้องเป็น Yes และเลือก 6.1 หรือ 6.2 (ที่กรอกข้อมูลครบ)
+        const q1to5Yes = (q1 && q1.value === 'yes') &&
                          (q2 && q2.value === 'yes') &&
                          (q3 && q3.value === 'yes') &&
-                         (q4 && q4.value === 'yes');
+                         (q4 && q4.value === 'yes') &&
+                         (q5 && q5.value === 'yes');
 
-        const q5ValidPass = (q5 && q5.value === 'yes') && 
-                            (q5Sub && (q5Sub.value === 'none' || (q5Sub.value === 'allergic' && allergyDetail !== '')));
+        const q6ValidPass = (q6 && q6.value === 'yes') && 
+                            (q6Sub && (q6Sub.value === 'none' || (q6Sub.value === 'allergic' && allergyDetail !== '')));
 
-        if (allAnswered && q1to4Yes && q5ValidPass) {
+        if (allAnswered && q1to5Yes && q6ValidPass) {
             resultBox.className = 'success';
             resultBox.innerHTML = '✅ ผ่าน';
 
-            // เช็คว่าถ้าเลือก 5.2 ให้แสดงกล่องเตือนรายละเอียดการแพ้เพิ่มเติม
-            if (q5Sub && q5Sub.value === 'allergic') {
+            // เช็คว่าถ้าเลือก 6.2 ให้แสดงกล่องเตือนรายละเอียดการแพ้เพิ่มเติม
+            if (q6Sub && q6Sub.value === 'allergic') {
                 warningBox.style.display = 'block';
                 warningBox.innerHTML = `<strong>⚠️ ข้อมูลแจ้งเตือนผู้ป่วยแพ้:</strong> ${allergyDetail}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
             } else {
