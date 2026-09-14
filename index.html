@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart QR Surgical Safety Checklist</title>
-    <!-- โหลดฟอนต์ Sarabun จาก Google Fonts เพื่อความสวยงาม -->
+    <!-- โหลดฟอนต์ Sarabun จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -65,9 +65,22 @@
             transition: all 0.2s ease;
         }
 
-        .question-item:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.05);
+        /* คลาสสำหรับเน้นข้อที่ผิดพลาด */
+        .question-item.error-highlight, .signature-section.error-highlight {
+            border: 2px solid #ef4444 !important;
+            background-color: #fef2f2 !important;
+        }
+
+        .error-label-text {
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error-highlight .error-label-text {
+            display: block;
         }
 
         .question-title {
@@ -109,7 +122,6 @@
             font-weight: 600;
         }
 
-        /* ส่วนข้อย่อยของข้อ 6 */
         .sub-options-container {
             margin-top: 15px;
             padding-top: 15px;
@@ -145,12 +157,6 @@
             font-size: 14px;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .hidden-input input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
         }
 
         .signature-section {
@@ -159,6 +165,7 @@
             background: #f8fafc;
             border-radius: 12px;
             border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
 
         .signature-section label {
@@ -179,51 +186,108 @@
             outline: none;
         }
 
-        .signature-section input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
-        }
-
-        /* ผลลัพธ์ */
-        #result-box {
-            margin-top: 25px;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
+        .submit-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
             font-size: 18px;
             font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.2s;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .submit-btn:hover {
+            background-color: #0d5e56;
+        }
+
+        /* หน้าต่าง Modal ผลลัพธ์เต็มจอ */
+        #result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.7);
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
         }
 
-        .success {
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-result-box {
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-success {
             background-color: #f0fdf4;
             color: #166534;
             border: 1px solid #bbf7d0;
         }
 
-        .danger {
+        .modal-danger {
             background-color: #fef2f2;
             color: #991b1b;
             border: 1px solid #fecaca;
         }
 
-        /* กล่องแจ้งเตือนอาการแพ้เพิ่มเติม */
-        #allergy-warning-box {
+        /* กล่องแสดงรายละเอียดข้อมูลสรุปในหน้า Modal สีเขียว */
+        #modal-info-box {
             margin-top: 10px;
-            background-color: #fffbeb;
-            color: #b45309;
-            border: 1px solid #fde68a;
-            padding: 12px;
+            background-color: #f0fdfa;
+            color: #134e4a;
+            border: 1px solid #99f6e4;
+            padding: 14px;
             border-radius: 8px;
             font-size: 14px;
             text-align: left;
             display: none;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Sarabun', sans-serif;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .modal-btn:hover {
+            background-color: #1e293b;
         }
 
         .ref {
@@ -244,85 +308,88 @@
         <p>ระบบตรวจสอบความปลอดภัยก่อนทำหัตถการผ่าตัด</p>
     </div>
     
-    <form id="safetyChecklist">
+    <form id="safetyChecklist" onsubmit="event.preventDefault(); submitChecklist();">
         <!-- ข้อ 1 -->
-        <div class="question-item">
+        <div class="question-item" id="item-q1">
             <span class="question-title">1. ชื่อและนามสกุลของผู้ป่วย ตรงกับป้ายข้อมือ</span>
             <div class="options">
-                <label><input type="radio" name="q1" value="yes" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q1" value="no" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q1" value="yes" onclick="clearError('q1')"> Yes</label>
+                <label><input type="radio" name="q1" value="no" onclick="clearError('q1')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
         </div>
 
         <!-- ข้อ 2 -->
-        <div class="question-item">
+        <div class="question-item" id="item-q2">
             <span class="question-title">2. สอบถามชื่อ-นามสกุลก่อนผู้ป่วยเคลื่อนย้ายหรือไม่</span>
             <div class="options">
-                <label><input type="radio" name="q2" value="yes" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q2" value="no" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q2" value="yes" onclick="clearError('q2')"> Yes</label>
+                <label><input type="radio" name="q2" value="no" onclick="clearError('q2')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
         </div>
 
         <!-- ข้อ 3 -->
-        <div class="question-item">
+        <div class="question-item" id="item-q3">
             <span class="question-title">3. ผู้ปกครองเซ็นต์ยินยอมให้ผู้ป่วยทำหัตถการ</span>
             <div class="options">
-                <label><input type="radio" name="q3" value="yes" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q3" value="no" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q3" value="yes" onclick="clearError('q3')"> Yes</label>
+                <label><input type="radio" name="q3" value="no" onclick="clearError('q3')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
         </div>
 
         <!-- ข้อ 4 -->
-        <div class="question-item">
+        <div class="question-item" id="item-q4">
             <span class="question-title">4. มีการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</span>
             <div class="options">
-                <label><input type="radio" name="q4" value="yes" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q4" value="no" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q4" value="yes" onclick="clearError('q4')"> Yes</label>
+                <label><input type="radio" name="q4" value="no" onclick="clearError('q4')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
         </div>
 
-        <!-- ข้อ 5 (เพิ่มใหม่: งดน้ำ-งดอาหาร) -->
-        <div class="question-item">
+        <!-- ข้อ 5 -->
+        <div class="question-item" id="item-q5">
             <span class="question-title">5. ผู้ป่วยได้รับการงดน้ำ-งดอาหารหรือไม่</span>
             <div class="options">
-                <label><input type="radio" name="q5" value="yes" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q5" value="no" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q5" value="yes" onclick="clearError('q5')"> Yes</label>
+                <label><input type="radio" name="q5" value="no" onclick="clearError('q5')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่ถูกต้องหรือไม่ได้ตอบ (ต้องเลือก Yes)</div>
         </div>
 
-        <!-- ข้อ 6 (เลื่อนมาจากข้อเดิม) -->
-        <div class="question-item">
+        <!-- ข้อ 6 -->
+        <div class="question-item" id="item-q6">
             <span class="question-title">6. มีการตรวจเช็คผู้ป่วยแพ้อาหารหรือยาหรือไม่</span>
             <div class="options">
-                <label><input type="radio" name="q6" value="yes" onclick="toggleQ6Main('yes')" onchange="checkStatus()"> Yes</label>
-                <label><input type="radio" name="q6" value="no" onclick="toggleQ6Main('no')" onchange="checkStatus()"> No</label>
+                <label><input type="radio" name="q6" value="yes" onclick="toggleQ6Main('yes'); clearError('q6');"> Yes</label>
+                <label><input type="radio" name="q6" value="no" onclick="toggleQ6Main('no'); clearError('q6');"> No</label>
             </div>
             
-            <!-- ข้อย่อยของข้อ 6 -->
             <div id="q6SubContainer" class="sub-options-container">
                 <label class="sub-option-item">
-                    <input type="radio" name="q6_sub" value="none" onclick="toggleQ6Sub('none')" onchange="checkStatus()"> 6.1 ไม่แพ้อาหารหรือยา
+                    <input type="radio" name="q6_sub" value="none" onclick="toggleQ6Sub('none'); clearError('q6');"> 6.1 ไม่แพ้อาหารหรือยา
                 </label>
                 <label class="sub-option-item">
-                    <input type="radio" name="q6_sub" value="allergic" onclick="toggleQ6Sub('allergic')" onchange="checkStatus()"> 6.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
+                    <input type="radio" name="q6_sub" value="allergic" onclick="toggleQ6Sub('allergic'); clearError('q6');"> 6.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
                 </label>
                 <div id="allergyDetailBox" class="hidden-input">
-                    <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา เช่น แพ้ยาเพนิซิลลิน..." oninput="checkStatus()">
+                    <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา..." oninput="clearError('q6')">
                 </div>
             </div>
+            <div class="error-label-text">⚠️ ข้อนี้ยังไม่สมบูรณ์หรือไม่ได้ตอบ</div>
         </div>
 
         <!-- ลงชื่อผู้ตรวจสอบ -->
-        <div class="signature-section">
+        <div class="signature-section" id="item-sig">
             <label for="inspectorName">ลงชื่อผู้ตรวจสอบ:</label>
-            <input type="text" id="inspectorName" placeholder="พิมพ์ชื่อ-นามสกุลผู้ตรวจสอบ..." oninput="checkStatus()">
+            <input type="text" id="inspectorName" placeholder="พิมพ์ชื่อ-นามสกุลผู้ตรวจสอบ..." oninput="clearError('sig')">
+            <div class="error-label-text">⚠️ กรุณากรอกชื่อผู้ตรวจสอบ</div>
         </div>
 
-        <!-- กล่องแสดงผลลัพธ์ -->
-        <div id="result-box"></div>
-        
-        <!-- กล่องแจ้งเตือนข้อมูลการแพ้แยกต่างหาก -->
-        <div id="allergy-warning-box"></div>
+        <!-- ปุ่มส่งผลการตรวจสอบ -->
+        <button type="submit" class="submit-btn">ตรวจสอบผลการปฏิบัติงาน</button>
     </form>
 
     <div class="ref">
@@ -330,7 +397,18 @@
     </div>
 </div>
 
+<!-- หน้าต่าง Modal แสดงผลลัพธ์ -->
+<div id="result-modal">
+    <div class="modal-content">
+        <div id="modal-result-box" class="modal-result-box"></div>
+        <div id="modal-info-box"></div>
+        <button id="modal-action-btn" class="modal-btn" onclick="handleModalButton()">ปิด</button>
+    </div>
+</div>
+
 <script>
+    let isPassed = false;
+
     function toggleQ6Main(val) {
         const subContainer = document.getElementById('q6SubContainer');
         const detailBox = document.getElementById('allergyDetailBox');
@@ -344,7 +422,6 @@
             radios.forEach(r => r.checked = false);
             document.getElementById('allergyDetail').value = '';
         }
-        checkStatus();
     }
 
     function toggleQ6Sub(subVal) {
@@ -355,10 +432,21 @@
             detailBox.style.display = 'none';
             document.getElementById('allergyDetail').value = '';
         }
-        checkStatus();
     }
 
-    function checkStatus() {
+    function clearError(target) {
+        if (target === 'sig') {
+            document.getElementById('item-sig').classList.remove('error-highlight');
+        } else {
+            document.getElementById('item-' + target).classList.remove('error-highlight');
+        }
+    }
+
+    function submitChecklist() {
+        // เคลียร์ไฮไลต์เก่า
+        document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
+        document.getElementById('item-sig').classList.remove('error-highlight');
+
         const q1 = document.querySelector('input[name="q1"]:checked');
         const q2 = document.querySelector('input[name="q2"]:checked');
         const q3 = document.querySelector('input[name="q3"]:checked');
@@ -368,54 +456,96 @@
         const q6Sub = document.querySelector('input[name="q6_sub"]:checked');
         const allergyDetail = document.getElementById('allergyDetail').value.trim();
         const inspectorName = document.getElementById('inspectorName').value.trim();
-        
-        const resultBox = document.getElementById('result-box');
-        const warningBox = document.getElementById('allergy-warning-box');
-        resultBox.style.display = 'block';
 
-        // ตรวจสอบความครบถ้วนของฟอร์ม
-        let q6Complete = false;
+        let hasError = false;
+
+        // ตรวจสอบความถูกต้องแต่ละข้อ
+        if (!q1 || q1.value !== 'yes') { document.getElementById('item-q1').classList.add('error-highlight'); hasError = true; }
+        if (!q2 || q2.value !== 'yes') { document.getElementById('item-q2').classList.add('error-highlight'); hasError = true; }
+        if (!q3 || q3.value !== 'yes') { document.getElementById('item-q3').classList.add('error-highlight'); hasError = true; }
+        if (!q4 || q4.value !== 'yes') { document.getElementById('item-q4').classList.add('error-highlight'); hasError = true; }
+        if (!q5 || q5.value !== 'yes') { document.getElementById('item-q5').classList.add('error-highlight'); hasError = true; }
+
+        let q6Valid = false;
         if (q6) {
-            if (q6.value === 'no') {
-                q6Complete = true; 
-            } else if (q6.value === 'yes' && q6Sub) {
+            if (q6.value === 'yes' && q6Sub) {
                 if (q6Sub.value === 'none') {
-                    q6Complete = true;
+                    q6Valid = true;
                 } else if (q6Sub.value === 'allergic' && allergyDetail !== '') {
-                    q6Complete = true;
+                    q6Valid = true;
                 }
             }
         }
+        if (!q6Valid) {
+            document.getElementById('item-q6').classList.add('error-highlight');
+            hasError = true;
+        }
 
-        const allAnswered = q1 && q2 && q3 && q4 && q5 && q6Complete && inspectorName !== '';
+        // ตรวจสอบชื่อผู้ตรวจสอบแยกต่างหาก
+        if (inspectorName === '') {
+            document.getElementById('item-sig').classList.add('error-highlight');
+            hasError = true;
+        }
 
-        // เงื่อนไขผ่าน: ข้อ 1-5 ต้องเป็น Yes, ข้อ 6 ต้องเป็น Yes และเลือก 6.1 หรือ 6.2 (ที่กรอกข้อมูลครบ)
-        const q1to5Yes = (q1 && q1.value === 'yes') &&
-                         (q2 && q2.value === 'yes') &&
-                         (q3 && q3.value === 'yes') &&
-                         (q4 && q4.value === 'yes') &&
-                         (q5 && q5.value === 'yes');
+        // จัดการเปิดหน้า Modal ผลลัพธ์
+        const modal = document.getElementById('result-modal');
+        const modalResultBox = document.getElementById('modal-result-box');
+        const modalInfoBox = document.getElementById('modal-info-box');
+        const modalActionBtn = document.getElementById('modal-action-btn');
 
-        const q6ValidPass = (q6 && q6.value === 'yes') && 
-                            (q6Sub && (q6Sub.value === 'none' || (q6Sub.value === 'allergic' && allergyDetail !== '')));
+        modal.style.display = 'flex';
 
-        if (allAnswered && q1to5Yes && q6ValidPass) {
-            resultBox.className = 'success';
-            resultBox.innerHTML = '✅ ผ่าน';
-
-            // เช็คว่าถ้าเลือก 6.2 ให้แสดงกล่องเตือนรายละเอียดการแพ้เพิ่มเติม
+        if (!hasError) {
+            isPassed = true;
+            modalResultBox.className = 'modal-result-box modal-success';
+            modalResultBox.innerHTML = '✅ ผ่าน';
+            
+            // สร้างข้อความรายละเอียด (ชื่อผู้ตรวจสอบ + ข้อมูลการแพ้ยา/อาหาร)
+            let infoHTML = `<strong>👤 ผู้ตรวจสอบ:</strong> ${escapeHtml(inspectorName)}`;
+            
             if (q6Sub && q6Sub.value === 'allergic') {
-                warningBox.style.display = 'block';
-                warningBox.innerHTML = `<strong>⚠️ ข้อมูลแจ้งเตือนผู้ป่วยแพ้:</strong> ${allergyDetail}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
+                infoHTML += `<br><br><strong>⚠️ แจ้งเตือนผู้ป่วยแพ้:</strong> ${escapeHtml(allergyDetail)}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
             } else {
-                warningBox.style.display = 'none';
-                warningBox.innerHTML = '';
+                infoHTML += `<br><br><strong>🟢 ข้อมูลการแพ้:</strong> ไม่แพ้อาหารหรือยา`;
             }
+
+            modalInfoBox.style.display = 'block';
+            modalInfoBox.innerHTML = infoHTML;
+
+            modalActionBtn.innerText = 'เริ่มต้นทำการตรวจสอบใหม่';
         } else {
-            resultBox.className = 'danger';
-            resultBox.innerHTML = 'ท่านยังปฏิบัติไม่ครบ กรุณาทบทวนกิจกรรม';
-            warningBox.style.display = 'none';
-            warningBox.innerHTML = '';
+            isPassed = false;
+            modalResultBox.className = 'modal-result-box modal-danger';
+            modalResultBox.innerHTML = 'ท่านยังปฏิบัติไม่ครบ กรุณาทบทวนกิจกรรม';
+            modalInfoBox.style.display = 'none';
+            modalInfoBox.innerHTML = '';
+            
+            modalActionBtn.innerText = 'กลับไปตรวจสอบอีกครั้ง';
+        }
+    }
+
+    // ฟังก์ชันป้องกัน XSS เบื้องต้นเวลาดึงชื่อมาแสดง
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function handleModalButton() {
+        const modal = document.getElementById('result-modal');
+        modal.style.display = 'none';
+
+        if (isPassed) {
+            // ล้างฟอร์มทั้งหมดเพื่อเริ่มใหม่
+            document.getElementById('safetyChecklist').reset();
+            document.getElementById('q6SubContainer').style.display = 'none';
+            document.getElementById('allergyDetailBox').style.display = 'none';
+            document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
+            document.getElementById('item-sig').classList.remove('error-highlight');
+        } else {
+            // พาหน้าจอเลื่อนไปที่จุดผิดพลาดจุดแรก
+            const firstError = document.querySelector('.error-highlight');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     }
 </script>
