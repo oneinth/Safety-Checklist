@@ -507,7 +507,6 @@
 </div>
 
 <script>
-    // เชื่อมต่อกับ Web App URL ของคุณเรียบร้อยแล้ว
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxx-9eDo9r11bYdEhrMLk2E7wKxUHvS5UOl917r5Gvd0OziMYuwWbOLwxxfQz_MCG6q3g/exec';
     let isPassed = false;
 
@@ -606,14 +605,15 @@
             return;
         }
 
+        // จัดรูปแบบข้อความข้อ 7 ตามเงื่อนไขใหม่
         let q7ResultText = "";
         if (q7.value === 'no') {
             q7ResultText = "No (ไม่ได้ตรวจเช็ค)";
         } else {
             if (q7Sub && q7Sub.value === 'none') {
-                q7ResultText = "7.1 ไม่แพ้อาหารหรือยา";
+                q7ResultText = "ไม่แพ้ยาหรืออาหาร";
             } else if (q7Sub && q7Sub.value === 'allergic') {
-                q7ResultText = "7.2 แพ้อาหาร/ยา (" + allergyDetail + ")";
+                q7ResultText = allergyDetail; // บันทึกเฉพาะข้อความที่กรอกลงไปอย่างเดียว
             }
         }
 
@@ -692,7 +692,7 @@
             if (q7Sub && q7Sub.value === 'allergic') {
                 infoHTML += `<br><br><strong>⚠️ แจ้งเตือนผู้ป่วยแพ้:</strong> ${escapeHtml(allergyDetail)}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
             } else {
-                infoHTML += `<br><br><strong>🟢 ข้อมูลการแพ้:</strong> ไม่แพ้อาหารหรือยา (7.1)`;
+                infoHTML += `<br><br><strong>🟢 ข้อมูลการแพ้:</strong> ไม่แพ้ยาหรืออาหาร`;
             }
 
             modalInfoBox.style.display = 'block';
