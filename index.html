@@ -38,12 +38,11 @@
             border-top: 5px solid var(--primary-color);
         }
 
-        /* ส่วนหัวข้อและโลโก้ด้านบน */
         .header-box {
             display: flex;
             align-items: center;
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-bottom: 1px solid #f1f5f9;
             padding-bottom: 20px;
         }
@@ -73,6 +72,34 @@
             margin: 4px 0 0 0;
         }
 
+        .hn-section {
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .hn-section label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #0f766e;
+        }
+
+        .hn-section input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            background: #fff;
+        }
+
         .question-item {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -82,8 +109,7 @@
             transition: all 0.2s ease;
         }
 
-        /* คลาสสำหรับเน้นข้อที่ผิดพลาด */
-        .question-item.error-highlight, .signature-section.error-highlight {
+        .question-item.error-highlight, .signature-section.error-highlight, .hn-section.error-highlight {
             border: 2px solid #ef4444 !important;
             background-color: #fef2f2 !important;
         }
@@ -174,6 +200,7 @@
             font-size: 14px;
             box-sizing: border-box;
             outline: none;
+            background: #fff;
         }
 
         .signature-section {
@@ -201,6 +228,7 @@
             font-size: 14px;
             box-sizing: border-box;
             outline: none;
+            background: #fff;
         }
 
         .submit-btn {
@@ -222,7 +250,7 @@
             background-color: #0d5e56;
         }
 
-        /* หน้าต่าง Modal ผลลัพธ์เต็มจอ */
+        /* หน้าต่าง Modal ผลลัพธ์ */
         #result-modal {
             position: fixed;
             top: 0;
@@ -247,6 +275,8 @@
             text-align: center;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
             animation: modalFadeIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes modalFadeIn {
@@ -255,9 +285,9 @@
         }
 
         .modal-result-box {
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
         }
@@ -279,12 +309,45 @@
             background-color: #f0fdfa;
             color: #134e4a;
             border: 1px solid #99f6e4;
-            padding: 14px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 14px;
             text-align: left;
             display: none;
-            line-height: 1.6;
+            line-height: 1.5;
+        }
+
+        #modal-fail-list {
+            margin-top: 10px;
+            background-color: #fff1f2;
+            color: #9f1239;
+            border: 1px solid #fecdd3;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: left;
+            display: none;
+            line-height: 1.5;
+        }
+
+        #sync-status-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            display: none;
+        }
+        .sync-success {
+            background-color: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .sync-error {
+            background-color: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
         }
 
         .modal-btn {
@@ -315,7 +378,6 @@
             padding-top: 15px;
         }
 
-        /* Responsive สำหรับมือถือขนาดเล็ก */
         @media (max-width: 480px) {
             .header-box {
                 flex-direction: column;
@@ -331,7 +393,6 @@
 
 <div class="container">
     <div class="header-box">
-        <!-- โลโก้วางไว้ซ้ายมือของหัวข้อ -->
         <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         <div class="header-text">
             <h2>Smart QR Surgical Safety Checklist</h2>
@@ -340,7 +401,12 @@
     </div>
     
     <form id="safetyChecklist" onsubmit="event.preventDefault(); submitChecklist();">
-        <!-- ข้อ 1 -->
+        <div class="hn-section" id="item-hn">
+            <label for="hnNumber">H/N (Hospital Number) ผู้ป่วย:</label>
+            <input type="text" id="hnNumber" placeholder="กรอกหมายเลข H/N ผู้ป่วย..." oninput="clearError('hn')">
+            <div class="error-label-text">⚠️ กรุณากรอกหมายเลข H/N ของผู้ป่วย</div>
+        </div>
+
         <div class="question-item" id="item-q1">
             <span class="question-title">1. ชื่อและนามสกุลของผู้ป่วย ตรงกับป้ายข้อมือ</span>
             <div class="options">
@@ -350,7 +416,6 @@
             <div class="error-label-text">⚠️ กรุณาตรวจสอบชื่อ-นามสกุลของผู้ป่วยให้ตรงกับป้ายข้อมือ</div>
         </div>
 
-        <!-- ข้อ 2 -->
         <div class="question-item" id="item-q2">
             <span class="question-title">2. สอบถามชื่อ-นามสกุลก่อนผู้ป่วยเคลื่อนย้ายหรือไม่</span>
             <div class="options">
@@ -360,7 +425,6 @@
             <div class="error-label-text">⚠️ กรุณาสอบถามชื่อ-นามสกุลก่อนผู้ป่วยเคลื่อนย้าย</div>
         </div>
 
-        <!-- ข้อ 3 -->
         <div class="question-item" id="item-q3">
             <span class="question-title">3. ผู้ปกครองเซ็นต์ยินยอมให้ผู้ป่วยทำหัตถการ</span>
             <div class="options">
@@ -370,56 +434,60 @@
             <div class="error-label-text">⚠️ กรุณาตรวจสอบการเซ็นยินยอมของผู้ปกครองให้เรียบร้อย</div>
         </div>
 
-        <!-- ข้อ 4 -->
         <div class="question-item" id="item-q4">
-            <span class="question-title">4. มีการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</span>
+            <span class="question-title">4. แพทย์ได้มีการเซ็นต์ยินยอมหรือไม่</span>
             <div class="options">
                 <label><input type="radio" name="q4" value="yes" onclick="clearError('q4')"> Yes</label>
                 <label><input type="radio" name="q4" value="no" onclick="clearError('q4')"> No</label>
             </div>
-            <div class="error-label-text">⚠️ กรุณาตรวจสอบการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบการเซ็นยินยอมของแพทย์ให้เรียบร้อย</div>
         </div>
 
-        <!-- ข้อ 5 -->
         <div class="question-item" id="item-q5">
-            <span class="question-title">5. ผู้ป่วยได้รับการงดน้ำ-งดอาหารหรือไม่</span>
+            <span class="question-title">5. มีการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</span>
             <div class="options">
                 <label><input type="radio" name="q5" value="yes" onclick="clearError('q5')"> Yes</label>
                 <label><input type="radio" name="q5" value="no" onclick="clearError('q5')"> No</label>
             </div>
+            <div class="error-label-text">⚠️ กรุณาตรวจสอบการระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)</div>
+        </div>
+
+        <div class="question-item" id="item-q6">
+            <span class="question-title">6. ผู้ป่วยได้รับการงดน้ำ-งดอาหารหรือไม่</span>
+            <div class="options">
+                <label><input type="radio" name="q6" value="yes" onclick="clearError('q6')"> Yes</label>
+                <label><input type="radio" name="q6" value="no" onclick="clearError('q6')"> No</label>
+            </div>
             <div class="error-label-text">⚠️ กรุณาตรวจสอบการงดน้ำ-งดอาหารของผู้ป่วย</div>
         </div>
 
-        <!-- ข้อ 6 -->
-        <div class="question-item" id="item-q6">
-            <span class="question-title">6. มีการตรวจเช็คผู้ป่วยแพ้อาหารหรือยาหรือไม่</span>
+        <div class="question-item" id="item-q7">
+            <span class="question-title">7. มีการตรวจเช็คผู้ป่วยแพ้อาหารหรือยาหรือไม่</span>
             <div class="options">
-                <label><input type="radio" name="q6" value="yes" onclick="toggleQ6Main('yes'); clearError('q6');"> Yes</label>
-                <label><input type="radio" name="q6" value="no" onclick="toggleQ6Main('no'); clearError('q6');"> No</label>
+                <label><input type="radio" name="q7" value="yes" onclick="toggleQ7Main('yes'); clearError('q7');"> Yes</label>
+                <label><input type="radio" name="q7" value="no" onclick="toggleQ7Main('no'); clearError('q7');"> No</label>
             </div>
             
-            <div id="q6SubContainer" class="sub-options-container">
+            <div id="q7SubContainer" class="sub-options-container">
                 <label class="sub-option-item">
-                    <input type="radio" name="q6_sub" value="none" onclick="toggleQ6Sub('none'); clearError('q6');"> 6.1 ไม่แพ้อาหารหรือยา
+                    <input type="radio" name="q7_sub" value="none" onclick="toggleQ7Sub('none'); clearError('q7');"> 7.1 ไม่แพ้อาหารหรือยา
                 </label>
                 <label class="sub-option-item">
-                    <input type="radio" name="q6_sub" value="allergic" onclick="toggleQ6Sub('allergic'); clearError('q6');"> 6.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
+                    <input type="radio" name="q7_sub" value="allergic" onclick="toggleQ7Sub('allergic'); clearError('q7');"> 7.2 แพ้อาหาร/ยา (โปรดระบุรายละเอียด)
                 </label>
                 <div id="allergyDetailBox" class="hidden-input">
-                    <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา..." oninput="clearError('q6')">
+                    <input type="text" id="allergyDetail" placeholder="กรุณาระบุรายละเอียดการแพ้อาหาร/ยา..." oninput="clearError('q7')">
                 </div>
             </div>
             <div class="error-label-text">⚠️ กรุณาตรวจสอบข้อมูลการแพ้อาหารหรือยาให้ครบถ้วน</div>
         </div>
 
-        <!-- ลงชื่อผู้ตรวจสอบ -->
         <div class="signature-section" id="item-sig">
             <label for="inspectorName">ลงชื่อผู้ตรวจสอบ:</label>
             <input type="text" id="inspectorName" placeholder="พิมพ์ชื่อ-นามสกุลผู้ตรวจสอบ..." oninput="clearError('sig')">
             <div class="error-label-text">⚠️ กรุณากรอกชื่อผู้ตรวจสอบให้เรียบร้อย</div>
         </div>
 
-        <!-- ปุ่มส่งผลการตรวจสอบ -->
         <button type="submit" class="submit-btn">ตรวจสอบผลการปฏิบัติงาน</button>
     </form>
 
@@ -428,34 +496,35 @@
     </div>
 </div>
 
-<!-- หน้าต่าง Modal แสดงผลลัพธ์ -->
 <div id="result-modal">
     <div class="modal-content">
         <div id="modal-result-box" class="modal-result-box"></div>
         <div id="modal-info-box"></div>
+        <div id="modal-fail-list"></div>
+        <div id="sync-status-box"></div>
         <button id="modal-action-btn" class="modal-btn" onclick="handleModalButton()">ปิด</button>
     </div>
 </div>
 
 <script>
+    // เชื่อมต่อกับ Web App URL ของคุณเรียบร้อยแล้ว
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxx-9eDo9r11bYdEhrMLk2E7wKxUHvS5UOl917r5Gvd0OziMYuwWbOLwxxfQz_MCG6q3g/exec';
     let isPassed = false;
 
-    function toggleQ6Main(val) {
-        const subContainer = document.getElementById('q6SubContainer');
+    function toggleQ7Main(val) {
+        const subContainer = document.getElementById('q7SubContainer');
         const detailBox = document.getElementById('allergyDetailBox');
-        
         if (val === 'yes') {
             subContainer.style.display = 'block';
         } else {
             subContainer.style.display = 'none';
             detailBox.style.display = 'none';
-            const radios = document.querySelectorAll('input[name="q6_sub"]');
-            radios.forEach(r => r.checked = false);
+            document.querySelectorAll('input[name="q7_sub"]').forEach(r => r.checked = false);
             document.getElementById('allergyDetail').value = '';
         }
     }
 
-    function toggleQ6Sub(subVal) {
+    function toggleQ7Sub(subVal) {
         const detailBox = document.getElementById('allergyDetailBox');
         if (subVal === 'allergic') {
             detailBox.style.display = 'block';
@@ -466,86 +535,184 @@
     }
 
     function clearError(target) {
-        if (target === 'sig') {
+        if (target === 'hn') {
+            document.getElementById('item-hn').classList.remove('error-highlight');
+        } else if (target === 'sig') {
             document.getElementById('item-sig').classList.remove('error-highlight');
         } else {
             document.getElementById('item-' + target).classList.remove('error-highlight');
         }
     }
 
-    function submitChecklist() {
+    async function submitChecklist() {
         document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
+        document.getElementById('item-hn').classList.remove('error-highlight');
         document.getElementById('item-sig').classList.remove('error-highlight');
 
+        const hnNumber = document.getElementById('hnNumber').value.trim();
         const q1 = document.querySelector('input[name="q1"]:checked');
         const q2 = document.querySelector('input[name="q2"]:checked');
         const q3 = document.querySelector('input[name="q3"]:checked');
         const q4 = document.querySelector('input[name="q4"]:checked');
         const q5 = document.querySelector('input[name="q5"]:checked');
         const q6 = document.querySelector('input[name="q6"]:checked');
-        const q6Sub = document.querySelector('input[name="q6_sub"]:checked');
+        const q7 = document.querySelector('input[name="q7"]:checked');
+        const q7Sub = document.querySelector('input[name="q7_sub"]:checked');
         const allergyDetail = document.getElementById('allergyDetail').value.trim();
         const inspectorName = document.getElementById('inspectorName').value.trim();
 
-        let hasError = false;
-
-        if (!q1 || q1.value !== 'yes') { document.getElementById('item-q1').classList.add('error-highlight'); hasError = true; }
-        if (!q2 || q2.value !== 'yes') { document.getElementById('item-q2').classList.add('error-highlight'); hasError = true; }
-        if (!q3 || q3.value !== 'yes') { document.getElementById('item-q3').classList.add('error-highlight'); hasError = true; }
-        if (!q4 || q4.value !== 'yes') { document.getElementById('item-q4').classList.add('error-highlight'); hasError = true; }
-        if (!q5 || q5.value !== 'yes') { document.getElementById('item-q5').classList.add('error-highlight'); hasError = true; }
-
-        let q6Valid = false;
-        if (q6) {
-            if (q6.value === 'yes' && q6Sub) {
-                if (q6Sub.value === 'none') {
-                    q6Valid = true;
-                } else if (q6Sub.value === 'allergic' && allergyDetail !== '') {
-                    q6Valid = true;
-                }
-            }
-        }
-        if (!q6Valid) {
-            document.getElementById('item-q6').classList.add('error-highlight');
-            hasError = true;
+        let missingInput = false;
+        if (hnNumber === '') { document.getElementById('item-hn').classList.add('error-highlight'); missingInput = true; }
+        if (!q1) { document.getElementById('item-q1').classList.add('error-highlight'); missingInput = true; }
+        if (!q2) { document.getElementById('item-q2').classList.add('error-highlight'); missingInput = true; }
+        if (!q3) { document.getElementById('item-q3').classList.add('error-highlight'); missingInput = true; }
+        if (!q4) { document.getElementById('item-q4').classList.add('error-highlight'); missingInput = true; }
+        if (!q5) { document.getElementById('item-q5').classList.add('error-highlight'); missingInput = true; }
+        if (!q6) { document.getElementById('item-q6').classList.add('error-highlight'); missingInput = true; }
+        
+        if (!q7) {
+            document.getElementById('item-q7').classList.add('error-highlight');
+            missingInput = true;
+        } else if (q7.value === 'yes' && !q7Sub) {
+            document.getElementById('item-q7').classList.add('error-highlight');
+            missingInput = true;
+        } else if (q7.value === 'yes' && q7Sub && q7Sub.value === 'allergic' && allergyDetail === '') {
+            document.getElementById('item-q7').classList.add('error-highlight');
+            missingInput = true;
         }
 
         if (inspectorName === '') {
             document.getElementById('item-sig').classList.add('error-highlight');
-            hasError = true;
+            missingInput = true;
         }
 
         const modal = document.getElementById('result-modal');
         const modalResultBox = document.getElementById('modal-result-box');
         const modalInfoBox = document.getElementById('modal-info-box');
+        const modalFailList = document.getElementById('modal-fail-list');
+        const syncStatusBox = document.getElementById('sync-status-box');
         const modalActionBtn = document.getElementById('modal-action-btn');
 
         modal.style.display = 'flex';
 
-        if (!hasError) {
-            isPassed = true;
-            modalResultBox.className = 'modal-result-box modal-success';
-            modalResultBox.innerHTML = '✅ ผ่าน';
-            
-            let infoHTML = `<strong>👤 ผู้ตรวจสอบ:</strong> ${escapeHtml(inspectorName)}`;
-            
-            if (q6Sub && q6Sub.value === 'allergic') {
-                infoHTML += `<br><br><strong>⚠️ แจ้งเตือนผู้ป่วยแพ้:</strong> ${escapeHtml(allergyDetail)}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
-            } else {
-                infoHTML += `<br><br><strong>🟢 ข้อมูลการแพ้:</strong> ไม่แพ้อาหารหรือยา`;
-            }
-
-            modalInfoBox.style.display = 'block';
-            modalInfoBox.innerHTML = infoHTML;
-
-            modalActionBtn.innerText = 'เริ่มต้นทำการตรวจสอบใหม่';
-        } else {
+        if (missingInput) {
             isPassed = false;
             modalResultBox.className = 'modal-result-box modal-danger';
             modalResultBox.innerHTML = 'ท่านยังปฏิบัติไม่ครบ กรุณาทบทวนกิจกรรม';
             modalInfoBox.style.display = 'none';
-            modalInfoBox.innerHTML = '';
+            modalFailList.style.display = 'none';
+            syncStatusBox.style.display = 'none';
+            modalActionBtn.innerText = 'กลับไปตรวจสอบอีกครั้ง';
+            return;
+        }
+
+        let q7ResultText = "";
+        if (q7.value === 'no') {
+            q7ResultText = "No (ไม่ได้ตรวจเช็ค)";
+        } else {
+            if (q7Sub && q7Sub.value === 'none') {
+                q7ResultText = "7.1 ไม่แพ้อาหารหรือยา";
+            } else if (q7Sub && q7Sub.value === 'allergic') {
+                q7ResultText = "7.2 แพ้อาหาร/ยา (" + allergyDetail + ")";
+            }
+        }
+
+        let failedItems = [];
+        if (q1.value !== 'yes') failedItems.push("ข้อ 1: ชื่อและนามสกุลของผู้ป่วย ตรงกับป้ายข้อมือ");
+        if (q2.value !== 'yes') failedItems.push("ข้อ 2: สอบถามชื่อ-นามสกุลก่อนผู้ป่วยเคลื่อนย้าย");
+        if (q3.value !== 'yes') failedItems.push("ข้อ 3: ผู้ปกครองเซ็นต์ยินยอมให้ผู้ป่วยทำหัตถการ");
+        if (q4.value !== 'yes') failedItems.push("ข้อ 4: แพทย์ได้มีการเซ็นต์ยินยอม");
+        if (q5.value !== 'yes') failedItems.push("ข้อ 5: การระบุตำแหน่งผ่าตัดของผู้ป่วย (marked site)");
+        if (q6.value !== 'yes') failedItems.push("ข้อ 6: ผู้ป่วยได้รับการงดน้ำ-งดอาหาร");
+        
+        if (q7.value !== 'yes') {
+            failedItems.push("ข้อ 7: การตรวจเช็คผู้ป่วยแพ้อาหารหรือยา (ไม่ได้ตรวจเช็ค)");
+        }
+
+        const payload = {
+            hn: hnNumber,
+            q1: q1.value,
+            q2: q2.value,
+            q3: q3.value,
+            q4: q4.value,
+            q5: q5.value,
+            q6: q6.value,
+            q7: q7ResultText,
+            inspector: inspectorName,
+            status: failedItems.length === 0 ? "ผ่าน" : "ไม่ผ่าน"
+        };
+
+        const currentTimeBangkok = new Intl.DateTimeFormat('th-TH', {
+            timeZone: 'Asia/Bangkok',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }).format(new Date());
+
+        syncStatusBox.style.display = 'block';
+        syncStatusBox.className = 'sync-error';
+        syncStatusBox.innerHTML = '⏳ กำลังบันทึกข้อมูลลงระบบ...';
+
+        let isSynced = false;
+        if (SCRIPT_URL && SCRIPT_URL !== 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                isSynced = true;
+            } catch (err) {
+                isSynced = false;
+                console.error("Sheet sync error:", err);
+            }
+        } else {
+            isSynced = false;
+        }
+
+        if (isSynced) {
+            syncStatusBox.className = 'sync-success';
+            syncStatusBox.innerHTML = `✅ ข้อมูลนี้บันทึกลงในระบบแล้ว<br><small style="color: #166534;">🕒 เวลาที่บันทึก: ${currentTimeBangkok}</small>`;
+        } else {
+            syncStatusBox.className = 'sync-error';
+            syncStatusBox.innerHTML = `❌ ไม่สามารถบันทึกได้เนื่องจาก: การเชื่อมต่ออินเทอร์เน็ตขัดข้องหรือระบบเซิร์ฟเวอร์ล้มเหลว<br>🕒 <strong>เวลาที่พยายามบันทึก:</strong> ${currentTimeBangkok}<br><br>👉 <strong>คำแนะนำ:</strong> กรุณานำเวลานี้และข้อมูลการตรวจสอบไปจดบันทึกด้วยลายมือลงในเอกสารสำรอง และแจ้งหัวหน้างานทันที`;
+        }
+
+        if (failedItems.length === 0) {
+            isPassed = true;
+            modalResultBox.className = 'modal-result-box modal-success';
+            modalResultBox.innerHTML = '✅ ผ่าน';
             
+            let infoHTML = `<strong>🏥 H/N ผู้ป่วย:</strong> ${escapeHtml(hnNumber)}<br><strong>👤 ผู้ตรวจสอบ:</strong> ${escapeHtml(inspectorName)}`;
+            if (q7Sub && q7Sub.value === 'allergic') {
+                infoHTML += `<br><br><strong>⚠️ แจ้งเตือนผู้ป่วยแพ้:</strong> ${escapeHtml(allergyDetail)}<br><span style="color: #9a3412; font-weight: 600;">👉 กรุณาแจ้งอาการแพ้ดังกล่าวกับแพทย์ผู้ดูแล</span>`;
+            } else {
+                infoHTML += `<br><br><strong>🟢 ข้อมูลการแพ้:</strong> ไม่แพ้อาหารหรือยา (7.1)`;
+            }
+
+            modalInfoBox.style.display = 'block';
+            modalInfoBox.innerHTML = infoHTML;
+            modalFailList.style.display = 'none';
+            modalActionBtn.innerText = 'เริ่มต้นทำการตรวจสอบใหม่';
+        } else {
+            isPassed = false;
+            modalResultBox.className = 'modal-result-box modal-danger';
+            modalResultBox.innerHTML = 'ท่านยังปฏิบัติไม่ครบหรือมีบางข้อไม่ผ่าน กรุณาทบทวนกิจกรรม';
+            modalInfoBox.style.display = 'none';
+
+            let failHtml = `<strong>❌ รายการที่ตอบ No / ต้องทบทวน:</strong><ul style="margin: 5px 0 0 20px; padding: 0;">`;
+            failedItems.forEach(item => {
+                failHtml += `<li>${item}</li>`;
+            });
+            failHtml += `</ul><br><span style="color: #9f1239; font-weight: 600;">👉 กรุณากลับไปตรวจสอบข้อเหล่านี้ แล้วกลับมาบันทึกผลอีกครั้ง</span>`;
+
+            modalFailList.style.display = 'block';
+            modalFailList.innerHTML = failHtml;
             modalActionBtn.innerText = 'กลับไปตรวจสอบอีกครั้ง';
         }
     }
@@ -560,9 +727,10 @@
 
         if (isPassed) {
             document.getElementById('safetyChecklist').reset();
-            document.getElementById('q6SubContainer').style.display = 'none';
+            document.getElementById('q7SubContainer').style.display = 'none';
             document.getElementById('allergyDetailBox').style.display = 'none';
             document.querySelectorAll('.question-item').forEach(el => el.classList.remove('error-highlight'));
+            document.getElementById('item-hn').classList.remove('error-highlight');
             document.getElementById('item-sig').classList.remove('error-highlight');
         } else {
             const firstError = document.querySelector('.error-highlight');
